@@ -34,6 +34,10 @@ from urllib3.exceptions import MaxRetryError, ProtocolError
 
 import pandas as pd
 
+#pillow
+from PIL import Image
+
+
 class Browser(Enum):
     CHROME = "chrome"
     CHROME_HEADLESS = "chrome_headless"
@@ -188,7 +192,7 @@ def get_driver(browser):
             chrome_opts.add_argument("--headless")
 
         # chromedriver needs this flag when running as root
-        if os.geteuid() == 0 or opts.disable_chrome_sandbox:
+        if opts.disable_chrome_sandbox:
             chrome_opts.add_argument("--no-sandbox")
 
         if opts.chrome_binary_path is not None:
@@ -364,7 +368,7 @@ def record_trace(url):
     thread.start()
 
     start_time = time.time()
-
+    """
     try:
         browser.get(url)
     except TimeoutException:
@@ -376,6 +380,15 @@ def record_trace(url):
     except Exception as e:
         print(type(e).__name__, e)
         return None
+    """
+    print("\nHeyy\n")
+    
+    #command_image = "C:\\Users\\Ege\\Desktop\\bigger-fish\\testimage2.jpg"
+    #command_video = "cd C:\\Program Files\\VideoLAN\\VLC & vlc "+os.path.abspath("testvideo.mp4)" + " --run-time=5 vlc://quit")
+    command_video = "cd C:\\Program Files\\VideoLAN\\VLC & vlc C:\\Users\\Ege\\Desktop\\bigger-fish\\testvideo.mp4 --run-time=8 vlc://quit "
+    #cd_back = "C:\\Users\\Ege\\Desktop\\bigger-fish "
+    os.system(command_video)
+    #os.system(cd_back)
 
     sleep_time = opts.trace_length - (time.time() - start_time)
 
@@ -391,6 +404,8 @@ def record_trace(url):
     if opts.browser == Browser.SAFARI and (opts.attacker_type == "javascript" or opts.attacker_type == "javascript_cache"):
         browser.close()
 
+    #command_quit = "taskkill /im vlc.exe"
+    #os.system(command_quit)
     return results
 
 
@@ -424,6 +439,7 @@ else:
     domains = opts.sites_list.split(",")
     domains = [f"https://{x}" for x in domains]
     using_custom_site = True
+    print("\nIm here\n")
 
 
 def should_skip(domain):
@@ -459,10 +475,18 @@ def run(domain, update_fn=None):
         if opts.browser == Browser.SAFARI and (opts.attacker_type == "javascript" or opts.attacker_type == "javascript_cache"):
             pass
         else:
+            """
             try:
                 browser.get(opts.browser.get_new_tab_url())
             except:
                 pass
+            
+            command_image = "C:\\Users\\Ege\\Desktop\\bigger-fish\\testimage.jpg"
+            command_video = "cd C:\\Program Files\\VideoLAN\\VLC & vlc "+os.path.abspath("testvideo.mp4")
+            cd_back = "C:\\Users\\Ege\\Desktop\\bigger-fish "
+            os.system(command_video)
+            os.system(cd_back)
+            """
 
         trace = record_trace(domain)
 
@@ -520,7 +544,8 @@ with tqdm(total=total_traces) as pbar:
             # window instead due to limitations in safaridriver.
             pass
         else:
-            browser = create_browser()
+            print("asda")
+            #browser = create_browser()
 
             if opts.browser == Browser.SAFARI:
                 attacker_browser = browser
@@ -534,7 +559,8 @@ with tqdm(total=total_traces) as pbar:
             pbar.n = (i + 1) * opts.num_runs
             pbar.refresh()
 
-        browser.quit()
+        #browser.quit()
+
 
 if opts.attacker_type == "javascript" or opts.attacker_type == "javascript_cache" or opts.attacker_type == "sleep":
     attacker_browser.quit()

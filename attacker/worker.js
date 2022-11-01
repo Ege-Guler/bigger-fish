@@ -3,8 +3,8 @@ const CACHE_ATTACKER = "cache";
 const OUR_ATTACKER_COUNTERMEASURE = "ours_cm";
 
 const P = 5; // time of one record, in milliseconds
-const L3_SIZE = 6 * 1024 * 1024;
-const CACHE_SIZE = L3_SIZE / 64;
+const L3_SIZE = 6 * 1024 * 1024; //unnecessary
+const CACHE_SIZE = L3_SIZE / 64; //unnecessary
 
 let addrs;
 let M;
@@ -101,6 +101,8 @@ const getTime = () => {
   return time;
 };
 
+
+//unecessary
 function countermeasureLoop() {
   while (true) {
     const datum_time = getTime();
@@ -147,6 +149,7 @@ function record(attacker) {
     case OUR_ATTACKER:
       ourLoop();
       break;
+    //we do not need this
     case CACHE_ATTACKER:
       cacheLoop();
       break;
